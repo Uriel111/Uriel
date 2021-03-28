@@ -1,4 +1,4 @@
-#include "NetWork.h"
+#include "Network.h"
 #include <iostream>
 Network::Network()
 {
