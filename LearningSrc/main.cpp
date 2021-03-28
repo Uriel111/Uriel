@@ -19,7 +19,7 @@ Test::~Test()
 
 int main()
 {
-    std::cout << "this is a test" <<endl;
+    std::cout << "this is a test" << endl;
     return 0;
-       
+    std::cout << "else" << std::endl;
 }
