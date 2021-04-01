@@ -1,3 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(CmakeProject)
+set(EXECUTABLE_OUTPUT_PATH ./bin/)
 add_executable(StupidFactorial StupidFactorial.cpp)
+add_executable(132pattern 132pattern.cpp)
+set(U)
