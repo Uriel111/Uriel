@@ -1,19 +1,22 @@
 #pragma once
 #include <Common/NoCopyable.hpp>
-namespace Uriel
-{
-class Socket: public NoCopyable
-{
-	Socket();
+
+namespace Uriel {
+class Socket : public NoCopyable {
+public:
+	Socket(int socketfd);
 	~Socket();
-};
-class TcpSocket
-{
-	TcpSocket(int socketfd);
-	~TcpSocket();
-	private:
+	const int GetSocketfd() const;
+
+protected:
 	int socketfd_;
-
-
 };
-}
+class TcpSocket : public Socket {
+public:
+	TcpSocket(bool block);
+	TcpSocket();
+	~TcpSocket();
+
+private:
+};
+} // namespace Uriel
