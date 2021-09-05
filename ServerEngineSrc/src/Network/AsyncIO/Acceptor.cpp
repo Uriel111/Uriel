@@ -30,13 +30,26 @@ int Acceptor::Accept() {
 }
 
 int Acceptor::Send(int clientId, std::string msg) {
-	return send(clientId, msg.c_str(), msg.size(), 0);
+	while (1) {
+		/* code */
+
+		size_t n = send(clientId, msg.c_str(), msg.size(), MSG_DONTWAIT);
+		if (n == -1) {
+			if (errno == EAGAIN) {
+				continue;
+			}
+			else {
+				perror("send error");
+			}
+		}
+		msg = std::string(msg.begin() + n, msg.end());
+	}
 }
 
 String Acceptor::Recv(int clientId) {
 	String readString;
 	while (1) {
-		int n = recv(clientId, readBuffer_, 127, MSG_DONTWAIT);
+		int n = recv(clientId, readBuffer_, 1, MSG_DONTWAIT);
 		if (n <= 0) {
 			if (n == 0)
 
