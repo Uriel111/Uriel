@@ -7,8 +7,7 @@ Acceptor::Acceptor() : isRunning_(false) {
 	memset(&sockAddr_, 0, sizeof(sockAddr_));
 	sockAddr_.sin_port = htons(NetWorkConfig::Instance().port_);
 	sockAddr_.sin_family = AF_INET;
-	sockAddr_.sin_addr.s_addr =
-		inet_addr(NetWorkConfig::Instance().ip_.c_str());
+	sockAddr_.sin_addr.s_addr = inet_addr(NetWorkConfig::Instance().ip_.c_str());
 	if (Bind() == -1) {
 		fmt::print("Failed to Bind\n");
 		return;
@@ -19,8 +18,7 @@ Acceptor::Acceptor() : isRunning_(false) {
 }
 
 int Acceptor::Bind() {
-	return bind(socket_.GetSocketfd(), (sockaddr *)&sockAddr_,
-				sizeof(sockAddr_));
+	return bind(socket_.GetSocketfd(), (sockaddr *)&sockAddr_, sizeof(sockAddr_));
 }
 
 int Acceptor::Listen() {
@@ -50,7 +48,8 @@ String Acceptor::Recv(int clientId) {
 					readString.errorNo_ = ERROR;
 			}
 			break;
-		} else
+		}
+		else
 			readString += std::string(readBuffer_, readBuffer_ + n);
 		/* code */
 	}
