@@ -11,7 +11,7 @@ int TcpClient::Connect(std::string ip, int port) {
 	sockAddr_.sin_addr.s_addr = inet_addr(ip.c_str());
 	sockAddr_.sin_port = htons(port);
 	return connect(tcpSocket_.GetSocketfd(), (sockaddr *)&sockAddr_,
-				   sizeof(sockaddr));
+				   sizeof(sockAddr_));
 }
 
 int TcpClient::Send(std::string msg) {

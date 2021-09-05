@@ -1,19 +1,21 @@
 #pragma once
-#include <sys/socket.h>
+#include <Network/AsyncIO/Acceptor.h>
 #include <Network/Socket.h>
+#include <sys/socket.h>
 #include <vector>
 namespace Uriel {
-class Selector {
+class Selector : public Acceptor {
 public:
 	Selector();
 	~Selector();
+	void Run();
 
 protected:
-	void AddFds(int fd);
-	void DelFds(int fd);
+	void Select();
 
 private:
-	TcpSocket socket_;
 	std::vector<int> fds_;
+	int maxFd_;
+	fd_set fdSet_;
 };
 } // namespace Uriel

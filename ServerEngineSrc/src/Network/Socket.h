@@ -13,8 +13,8 @@ protected:
 };
 class TcpSocket : public Socket {
 public:
-	TcpSocket(bool block);
 	TcpSocket();
+	TcpSocket(bool block);
 	~TcpSocket();
 
 private:
