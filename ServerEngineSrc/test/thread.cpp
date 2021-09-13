@@ -1,3 +1,4 @@
+#include <Thread/AsyncMgr.h>
 #include <Thread/ThreadPoll.h>
 #include <fmt/printf.h>
 #include <iostream>
@@ -6,28 +7,14 @@
 using namespace Uriel;
 
 int main() {
-	ThreadPoll poll(5, 10);
-	poll.AddTask(std::move([]() {
-		fmt::print("1111\n");
-		std::cout << "this thread is:" << std::this_thread::get_id() << std::endl;
-	}));
-	poll.AddTask([]() {
-		fmt::print("1111\n");
-		std::cout << "this thread is:" << std::this_thread::get_id() << std::endl;
-	});
-	poll.AddTask([]() {
-		fmt::print("1111\n");
-		std::cout << "this thread is:" << std::this_thread::get_id() << std::endl;
-	});
-	poll.AddTask([]() {
-		fmt::print("1111\n");
-		std::cout << "this thread is:" << std::this_thread::get_id() << std::endl;
-	});
-	poll.Start();
-	poll.AddTask([]() {
-		fmt::print("2222\n");
-		std::cout << "this thread is:" << std::this_thread::get_id() << std::endl;
-	});
+	AsyncMgrInst.RegNameWorker("Test");
+	AsyncMgrInst.AsyncCall("Test", []() { fmt::print("hello workd\n"); });
+	// AsyncMgr::Instance().AsyncCall();
+	AsyncMgrInst.AsyncCall("test", []() { fmt::print("hello workd\n"); });
+	AsyncMgrInst.AsyncCall("Test", []() { AsyncMgrInst.AsyncPost([]() { fmt::print("hello world 2\n"); }); });
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	AsyncMgrInst.AsyncPoll();
+	// fmt::print("end!\n");
 
 	// while (1) {
 	// }

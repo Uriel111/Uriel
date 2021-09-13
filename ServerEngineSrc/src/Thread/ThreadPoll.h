@@ -7,13 +7,17 @@
 #include <thread>
 #include <vector>
 namespace Uriel {
-class ThreadPoll {
+class ThreadPoll : public NoCopyable {
 public:
 	using Function = std::function<void()>;
 	ThreadPoll(unsigned short threadNums, unsigned int maxFuncNums);
+	ThreadPoll(); // main thread poll, run in main thread
+	ThreadPoll(unsigned short threadNums);
+	// ThreadPoll(ThreadPoll &&threadPoll);
 	~ThreadPoll();
 	void Start();
 	void Stop();
+	void Poll();
 	void AddTask(Function &&func_);
 	void SetThreadNums(unsigned short threadNums);
 	const unsigned int FuncSize() const;
