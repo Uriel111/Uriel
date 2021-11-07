@@ -1,21 +1,25 @@
 #include <Common/Logging.h>
 #include <chrono>
+#include <filesystem>
 #include <iomanip>
+#include <iostream>
 namespace Uriel {
 
 Logger &Logger::Instance() {
 	static Logger logger;
 	return logger;
 }
+
+std::string Logger::LogPrefix;
+
+#define __DIR__ (std::filesystem::path(__FILE__).parent_path().string())
+
 Logger::Logger() {
-	infoFile_.open(__FILE__ "../../Log/"
-							"info.log");
-	warnFile_.open(__FILE__ "../../Log/"
-							"warn.log");
-	errorFile_.open(__FILE__ "../../Log/"
-							 "error.log");
-	errorFile_.open(__FILE__ "../../Log/"
-							 "debug.log");
+	std::cout << LogPrefix << std::endl;
+	infoFile_.open(__DIR__ + "/../../Log/" + LogPrefix + "Info.log");
+	warnFile_.open(__DIR__ + "/../../Log/" + LogPrefix + "Warn.log");
+	errorFile_.open(__DIR__ + "/../../Log/" + LogPrefix + "Error.log");
+	debugFile_.open(__DIR__ + "/../../Log/" + LogPrefix + "Debug.log");
 }
 
 Logger::~Logger() {

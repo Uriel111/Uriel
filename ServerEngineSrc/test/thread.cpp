@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdio.h>
 #include <thread>
+
 using namespace Uriel;
 void print(int a, int b) {
 	std::cout << a << " " << b << std::endl;
@@ -22,7 +23,8 @@ int main() {
 	// //fmt::printf
 	// test(1, 2, 3, 5);
 	char test[3];
-	LogWarn("1111%s", "hello");
+	Logger::LogPrefix = "Client";
+	LogWarn("2222%s", "hello");
 	// std::this_thread::sleep_for(std::chrono::seconds(1));
 	// AsyncMgrInst.AsyncPoll();
 	// fmt::print("end!\n");

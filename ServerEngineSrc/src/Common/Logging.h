@@ -1,6 +1,5 @@
 #pragma once
 #include <fstream>
-
 namespace Uriel {
 enum LogRank
 {
@@ -13,7 +12,7 @@ enum LogRank
 class Logger {
 public:
 	static Logger &Instance();
-
+	static std::string LogPrefix;
 	template <typename... T> void Log(LogRank logRank, const std::string &formatStr, const char *codeFile, int codeLine, const char *codeFunc, const T &...args) {
 		std::string realFormatStr = FormatTime() + "%s:%d:%s:" + formatStr + "\n";
 		int size = snprintf(nullptr, 0, realFormatStr.data(), codeFile, codeLine, codeFunc, args...);
