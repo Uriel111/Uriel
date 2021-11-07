@@ -10,7 +10,6 @@ void ReadWriteLock::ReadLock() {
 		cond_.Wait();
 		/* code */
 	}
-	// fmt::print("readNums:{}\n", readNums_);
 	readNums_++;
 }
 

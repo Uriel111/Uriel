@@ -8,15 +8,21 @@ Logger &Logger::Instance() {
 	return logger;
 }
 Logger::Logger() {
-	infoFile_.open("info.log");
-	warnFile_.open("warn.log");
-	errorFile_.open("error.log");
+	infoFile_.open(__FILE__ "../../Log/"
+							"info.log");
+	warnFile_.open(__FILE__ "../../Log/"
+							"warn.log");
+	errorFile_.open(__FILE__ "../../Log/"
+							 "error.log");
+	errorFile_.open(__FILE__ "../../Log/"
+							 "debug.log");
 }
 
 Logger::~Logger() {
 	infoFile_.close();
 	warnFile_.close();
 	errorFile_.close();
+	debugFile_.close();
 }
 
 std::string Logger::FormatTime() {
@@ -47,9 +53,8 @@ void Logger::Write(LogRank logRank, char *buffer, std::size_t size) {
 		/* code */
 		infoFile_.write(buffer, size);
 
-		break;
-
 	default:
+		debugFile_.write(buffer, size);
 		break;
 	}
 }

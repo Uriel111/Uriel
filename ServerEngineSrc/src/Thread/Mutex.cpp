@@ -1,26 +1,25 @@
+#include <Common/Logging.h>
 #include <Thread/Mutex.h>
-#include <fmt/printf.h>
 namespace Uriel {
 Mutex::Mutex() {
 	if (pthread_mutex_init(&mutex_, nullptr)) {
-		fmt::print("failed to mutex init \n");
+		LogError("failed to mutex init ");
 	}
 }
 Mutex::~Mutex() {
 	if (pthread_mutex_destroy(&mutex_)) {
-		fmt::print("failed to destroy mutex\n");
+		LogError("failed to destroy mutex");
 	}
 }
 void Mutex::Lock() {
-	// fmt::print("lock!\n");
 	if (pthread_mutex_lock(&mutex_)) {
-		fmt::print("failed to lock mutex\n");
+		LogError("failed to lock mutex");
 	}
 }
 
 void Mutex::UnLock() {
 	if (pthread_mutex_unlock(&mutex_)) {
-		fmt::print("failed to unlock mutex");
+		LogError("failed to unlock mutex");
 	}
 }
 

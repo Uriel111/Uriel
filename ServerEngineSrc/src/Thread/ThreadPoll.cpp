@@ -59,7 +59,6 @@ ThreadPoll::Function ThreadPoll::GetTask() {
 	if (!IsEmpty()) {
 		func = funcs_.front();
 		funcs_.pop();
-		// fmt::print("cur func num2:{}\n", funcs_.size());
 		notFull_.Notify();
 	}
 	return func;
@@ -75,10 +74,8 @@ const bool ThreadPoll::IsEmpty() const {
 
 void ThreadPoll::RunInSubThread() {
 
-	// fmt::print("run is subthread\n");
 	while (isRunning_.GetValue()) {
 		Function func = GetTask();
-		// fmt::print("get task\n");
 		func();
 		/* code */
 	}

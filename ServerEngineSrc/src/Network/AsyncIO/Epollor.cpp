@@ -1,3 +1,4 @@
+#include <Common/Logging.h>
 #include <Network/AsyncIO/Epollor.h>
 #include <fmt/printf.h>
 #include <sys/unistd.h>
@@ -20,21 +21,21 @@ void Epollor::Run() {
 			if (events_[i].data.fd == socket_.GetSocketfd()) {
 				int connectId = Accept();
 				AddReadEvent(connectId);
-				fmt::print("Get a new connection:{}\n", connectId);
+				LogDebug("Get a new connection:%d", connectId);
 			}
 			else {
 				String msg = Recv(events_[i].data.fd);
 				if (msg.errorNo_ == TRY_AGAIN) {
-					fmt::print("get msg:{}\n", msg);
+					LogInfo("get msg:%s", msg);
 				}
 				else if (msg.errorNo_ == LOST_CONNECTION) {
-					fmt::print("lose connection:{}\n", static_cast<int>(events_[i].data.fd));
+					LogDebug("lose connection:%s", static_cast<int>(events_[i].data.fd));
 					DelWriteEvent(events_[i].data.fd);
 					DelReadEvent(events_[i].data.fd);
 					close(events_[i].data.fd);
 				}
 				else {
-					perror("recv error occur\n");
+					LogDebug("recv error occur\n");
 				}
 			}
 		}
@@ -108,7 +109,6 @@ bool Epollor::DelReadEvent(int sockfd) {
 
 			eventMap_.erase(sockfd);
 			events_.resize(eventMap_.size());
-			fmt::print("clear read\n");
 
 			return true;
 		}
@@ -134,7 +134,6 @@ bool Epollor::DelWriteEvent(int sockfd) {
 
 			eventMap_.erase(sockfd);
 			events_.resize(eventMap_.size());
-			fmt::print("clear write\n");
 
 			return true;
 		}

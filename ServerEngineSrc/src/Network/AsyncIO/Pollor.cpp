@@ -1,5 +1,5 @@
+#include <Common/Logging.h>
 #include <Network/AsyncIO/Pollor.h>
-#include <fmt/printf.h>
 namespace Uriel {
 Poller::Poller() {
 	pollfd pollFd;
@@ -22,7 +22,7 @@ void Poller::Run() {
 		if (it->revents & POLLIN) {
 			if (it->fd == socket_.GetSocketfd()) {
 				int connectId = Accept();
-				fmt::print("get new connection:{}\n", connectId);
+				LogDebug("get new connection:%d\n", connectId);
 				pollfd pollfdCache;
 				pollfdCache.fd = connectId;
 				pollfdCache.events = POLLIN;
@@ -33,10 +33,10 @@ void Poller::Run() {
 				// GetMsg
 				String msg = Recv(it->fd);
 				if (msg.errorNo_ == TRY_AGAIN) {
-					fmt::print("get msg:{}\n", msg);
+					LogDebug("get msg:%s", msg);
 				}
 				else {
-					fmt::print("lose conncection:{}", it->fd);
+					LogDebug("lose conncection:%d", it->fd);
 					it = pollFds_.erase(it);
 					continue;
 				}

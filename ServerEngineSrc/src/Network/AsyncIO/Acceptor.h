@@ -10,7 +10,7 @@ enum ERROR_NO
 {
 	LOST_CONNECTION,
 	TRY_AGAIN,
-	ERROR
+	ERROR_CONNECTION
 };
 class String : public std::string {
 public:

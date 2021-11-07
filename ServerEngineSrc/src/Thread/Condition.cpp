@@ -1,35 +1,35 @@
+#include <Common/Logging.h>
 #include <Thread/Condition.h>
-#include <fmt/printf.h>
 namespace Uriel {
 
 Condition::Condition(Mutex &mutex) : mutex_(mutex) {
 	if (pthread_cond_init(&cond_, nullptr)) {
-		fmt::print("failed to cond init\n");
+		LogError("failed to cond init");
 	}
 }
 
 Condition::~Condition() {
 	if (pthread_cond_destroy(&cond_)) {
-		fmt::print("failed to cond destroy\n");
+		LogError("failed to cond destroy");
 	}
 }
 
 void Condition::Wait() {
 
 	if (pthread_cond_wait(&cond_, mutex_.GetRawMutex())) {
-		fmt::print("failed to wait cond\n");
+		LogError("failed to wait cond");
 	}
 }
 
 void Condition::Notify() {
 	if (pthread_cond_signal(&cond_)) {
-		fmt::print("failed to notify\n ");
+		LogError("failed to notify");
 	}
 }
 
 void Condition::NotifyAll() {
 	if (pthread_cond_broadcast(&cond_)) {
-		fmt::print("failed to notify all\n");
+		LogError("failed to notify all");
 	}
 }
 } // namespace Uriel

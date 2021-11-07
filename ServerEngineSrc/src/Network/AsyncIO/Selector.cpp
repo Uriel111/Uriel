@@ -1,4 +1,5 @@
 #include "Selector.h"
+#include <Common/Logging.h>
 #include <fmt/printf.h>
 #include <sys/select.h>
 #include <unistd.h>
@@ -21,7 +22,7 @@ void Selector::Select() {
 	if (res == -1)
 		return;
 	if (res == 0)
-		fmt::print("time out\n");
+		LogDebug("time out");
 	std::vector<int> fdsCache;
 	for (auto it = fds_.begin(); it != fds_.end();) {
 		if (FD_ISSET(*it, &fdSet_)) {
@@ -31,22 +32,24 @@ void Selector::Select() {
 
 					// fds_.insert(connectId);
 					fdsCache.emplace_back(connectId);
-					fmt::print("get a new connection{}\n", connectId);
+					LogDebug("get a new connection%d", connectId);
 				}
 				// get a new connection
-			} else {
+			}
+			else {
 				// recv a new message
 				String msg = Recv(*it);
 				;
 				if (msg.size() == 0 && msg.errorNo_ != TRY_AGAIN) {
 
-					fmt::print("connection:{} lost \n", *it);
+					LogDebug("connection:%d lost ", *it);
 					// close(it);
 					close(*it);
 					it = fds_.erase(it);
 					continue;
-				} else {
-					fmt::print("get message:{}\n", msg);
+				}
+				else {
+					LogDebug("get message:%s", msg);
 				}
 			}
 		}

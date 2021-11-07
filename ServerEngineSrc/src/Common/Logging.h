@@ -5,6 +5,7 @@ namespace Uriel {
 enum LogRank
 {
 	INFO,
+	DEBUG,
 	WARN,
 	ERROR
 };
@@ -36,9 +37,11 @@ private:
 	std::ofstream infoFile_;
 	std::ofstream warnFile_;
 	std::ofstream errorFile_;
+	std::ofstream debugFile_;
 };
 
-#define LogInfo(formatStr, ...) (Logger::Instance().Log(INFO, "INFO->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
-#define LogWarn(formatStr, ...) (Logger::Instance().Log(WARN, "WARN->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
-#define LogError(formatStr, ...) (Logger::Instance().Log(ERROR, "ERROR->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
+#define LogInfo(formatStr, ...) (Logger::Instance().Log(LogRank::INFO, "INFO->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
+#define LogDebug(formatStr, ...) (Logger::Instance().Log(LogRank::DEBUG, "DEBUG->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
+#define LogWarn(formatStr, ...) (Logger::Instance().Log(LogRank::WARN, "WARN->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
+#define LogError(formatStr, ...) (Logger::Instance().Log(LogRank::ERROR, "ERROR->" formatStr, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__));
 } // namespace Uriel

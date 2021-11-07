@@ -1,6 +1,6 @@
+#include <Common/Logging.h>
 #include <Network/AsyncIO/Acceptor.h>
 #include <Network/NetWorkConfig.hpp>
-#include <fmt/printf.h>
 #include <string.h>
 namespace Uriel {
 Acceptor::Acceptor() : isRunning_(false) {
@@ -9,11 +9,11 @@ Acceptor::Acceptor() : isRunning_(false) {
 	sockAddr_.sin_family = AF_INET;
 	sockAddr_.sin_addr.s_addr = inet_addr(NetWorkConfig::Instance().ip_.c_str());
 	if (Bind() == -1) {
-		fmt::print("Failed to Bind\n");
+		LogError("Failed to Bind");
 		return;
 	}
 	if (Listen() == -1) {
-		fmt::print("Failed to Listen\n");
+		LogError("Failed to Listen");
 	}
 }
 
@@ -53,12 +53,12 @@ String Acceptor::Recv(int clientId) {
 		if (n <= 0) {
 			if (n == 0)
 
-				readString.errorNo_ = LOST_CONNECTION;
+				readString.errorNo_ = ERROR_NO::LOST_CONNECTION;
 			else {
 				if (errno == EAGAIN)
-					readString.errorNo_ = TRY_AGAIN;
+					readString.errorNo_ = ERROR_NO::TRY_AGAIN;
 				else
-					readString.errorNo_ = ERROR;
+					readString.errorNo_ = ERROR_NO::ERROR_CONNECTION;
 			}
 			break;
 		}

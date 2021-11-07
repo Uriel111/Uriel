@@ -1,7 +1,7 @@
 #include "TcpServer.h"
 #include "NetWorkConfig.hpp"
+#include <Common/Logging.h>
 #include <arpa/inet.h>
-#include <fmt/printf.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -13,24 +13,24 @@ TcpServer::TcpServer() : tcpSocket_(false) {
 	memset(&sockAddr_, 0, sizeof(sockAddr_));
 	sockAddr_.sin_family = AF_INET;
 	sockAddr_.sin_port = htons(NetWorkConfig::Instance().port_);
-	sockAddr_.sin_addr.s_addr =
-		inet_addr(NetWorkConfig::Instance().ip_.c_str());
+	sockAddr_.sin_addr.s_addr = inet_addr(NetWorkConfig::Instance().ip_.c_str());
 	if (Bind() == -1)
-		fmt::print("Failed to bind!\n");
+		LogError("Failed to bind!\n");
 
 	if (Listen() == -1)
-		fmt::print("Failed to listen\n");
+		LogError("Failed to listen");
 	while (1) {
 		int clientId = Accept();
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		if (clientId == -1) {
-			fmt::print("there is no connection\n");
+			LogError("there is no connection\n");
 			continue;
-		} else {
-			fmt::print("get client{}! \n", clientId);
+		}
+		else {
+			LogDebug("get client%d!", clientId);
 		}
 		for (auto clientId : clientIds) {
-			fmt::print("try to get mesg\n");
+			LogError("try to get mesg");
 			Recv(clientId);
 		}
 	}
@@ -47,15 +47,14 @@ std::string TcpServer::Recv(int clientId) {
 	if (n <= 0) {
 		return readString;
 	}
-	fmt::print("recv msg n = {}\n", n);
+	LogDebug("recv msg n = %d\n", n);
 	readString += std::string(readBuffer, readBuffer + n);
-	fmt::print("get msg {}, size  is {}\n", readString, n);
+	LogDebug("get msg %s, size  is %d\n", readString, n);
 	return readString;
 }
 
 int TcpServer::Bind() {
-	return bind(tcpSocket_.GetSocketfd(), (sockaddr *)&sockAddr_,
-				sizeof(sockAddr_));
+	return bind(tcpSocket_.GetSocketfd(), (sockaddr *)&sockAddr_, sizeof(sockAddr_));
 }
 
 int TcpServer::Listen() {
