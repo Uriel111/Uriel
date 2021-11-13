@@ -2,34 +2,33 @@
 #include <Thread/Condition.h>
 namespace Uriel {
 
-Condition::Condition(Mutex &mutex) : mutex_(mutex) {
-	if (pthread_cond_init(&cond_, nullptr)) {
-		LogError("failed to cond init");
-	}
+Condition::Condition() {
+	
 }
 
 Condition::~Condition() {
-	if (pthread_cond_destroy(&cond_)) {
-		LogError("failed to cond destroy");
-	}
 }
 
-void Condition::Wait() {
+void Condition::Wait(SpinLock& spinLock,  std::function<bool()>&& func) {
 
-	if (pthread_cond_wait(&cond_, mutex_.GetRawMutex())) {
-		LogError("failed to wait cond");
-	}
+	condition_.wait(spinLock, func);
 }
 
-void Condition::Notify() {
-	if (pthread_cond_signal(&cond_)) {
-		LogError("failed to notify");
-	}
+void Condition::Wait(SpinLock& spinLock)
+{
+	condition_.wait(spinLock);
+}
+
+void Condition::Wait(LockGuard& lockGuard)
+{
+	condition_.wait(lockGuard.GetSpinLock());
+}
+
+void Condition::NotifyOne() {
+	condition_.notify_one();
 }
 
 void Condition::NotifyAll() {
-	if (pthread_cond_broadcast(&cond_)) {
-		LogError("failed to notify all");
-	}
+	condition_.notify_all();
 }
 } // namespace Uriel

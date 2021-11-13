@@ -2,6 +2,7 @@
 #include <chrono>
 #include <filesystem>
 #include <iomanip>
+#include <thread>
 #include <iostream>
 namespace Uriel {
 
@@ -42,23 +43,28 @@ std::string Logger::FormatTime() {
 #endif
 	std::ostringstream oss;
 	oss << std::put_time(&timeBuff, "%Y-%m-%d-%X");
-	oss << "." << std::setfill('0') << std::setw(3) << ms.count() << ":";
+	oss << "." << std::setfill('0') << std::setw(3) << ms.count() << ":ThreadID:" << std::this_thread::get_id()<< ":";
 	return oss.str();
 }
 
 void Logger::Write(LogRank logRank, char *buffer, std::size_t size) {
+	std::cout << buffer ;
 	switch (logRank) {
 	case ERROR:
 		errorFile_.write(buffer, size);
+		errorFile_.flush();
 	case WARN:
 		warnFile_.write(buffer, size);
+		warnFile_.flush();
 
 	case /* constant-expression */ INFO:
 		/* code */
 		infoFile_.write(buffer, size);
+		infoFile_.flush();
 
 	default:
 		debugFile_.write(buffer, size);
+		debugFile_.flush();
 		break;
 	}
 }

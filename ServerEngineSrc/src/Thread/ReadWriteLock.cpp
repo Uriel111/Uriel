@@ -2,34 +2,34 @@
 #include <fmt/printf.h>
 #include <numeric>
 namespace Uriel {
-ReadWriteLock::ReadWriteLock() : cond_(mutex_), readNums_(0) {}
+ReadWriteLock::ReadWriteLock() : cond_(), readNums_(0) {}
 template class ReadWriteLockValue<bool>;
 void ReadWriteLock::ReadLock() {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	while (readNums_ < 0) {
-		cond_.Wait();
+		cond_.Wait(lock);
 		/* code */
 	}
 	readNums_++;
 }
 
 void ReadWriteLock::ReadUnLock() {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	if (--readNums_ == 0)
-		cond_.Notify();
+		cond_.NotifyAll();
 }
 
 void ReadWriteLock::WriteLock() {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	while (readNums_ > 0) {
-		cond_.Wait();
+		cond_.Wait(lock);
 		/* code */
 	}
 	readNums_ = -1;
 }
 
 void ReadWriteLock::WriteUnLock() {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	readNums_ = 0;
 	cond_.NotifyAll();
 }

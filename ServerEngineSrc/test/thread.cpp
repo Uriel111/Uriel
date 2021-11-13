@@ -15,16 +15,17 @@ template <typename... T> void test(T... args) {
 }
 
 int main() {
-	// AsyncMgrInst.RegNameWorker("Test");
-	// AsyncMgrInst.AsyncCall("Test", []() { fmt::print("hello workd\n"); });
-	// // AsyncMgr::Instance().AsyncCall();
-	// AsyncMgrInst.AsyncCall("test", []() { fmt::print("hello workd\n"); });
-	// AsyncMgrInst.AsyncCall("Test", []() { AsyncMgrInst.AsyncPost([]() { fmt::print("hello world 2\n"); }); });
-	// //fmt::printf
-	// test(1, 2, 3, 5);
-	char test[3];
-	Logger::LogPrefix = "Client";
-	LogWarn("2222%s", "hello");
+	ThreadPoll poll(3);
+	poll.Start();
+	for (int i = 0; i != 200; ++i)
+	{
+		std::this_thread::sleep_for(std::chrono::microseconds(1));
+		for (int j = 0; j != 10; ++j)
+			poll.AddTask([]() { LogInfo("111"); });
+	}
+
+	// poll.AddTask([]() { LogInfo("111"); });
+
 	// std::this_thread::sleep_for(std::chrono::seconds(1));
 	// AsyncMgrInst.AsyncPoll();
 	// fmt::print("end!\n");

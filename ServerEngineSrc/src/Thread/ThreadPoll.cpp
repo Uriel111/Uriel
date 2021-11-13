@@ -1,10 +1,10 @@
+#include <Common/Logging.h>
 #include <Thread/ThreadPoll.h>
 #include <exception>
-#include <fmt/printf.h>
 #include <iostream>
 #include <numeric>
 namespace Uriel {
-ThreadPoll::ThreadPoll(unsigned short threadNums, unsigned int maxFuncNums) : threadNums_(threadNums), notEmpty_(mutex_), notFull_(mutex_), maxFuncNums_(maxFuncNums), isRunning_(false) {}
+ThreadPoll::ThreadPoll(unsigned short threadNums, unsigned int maxFuncNums) : threadNums_(threadNums), notEmpty_(), notFull_(), maxFuncNums_(maxFuncNums), isRunning_(false) {}
 
 ThreadPoll::ThreadPoll() : ThreadPoll(0, std::numeric_limits<unsigned int>::max()) {}
 
@@ -39,27 +39,27 @@ const unsigned int ThreadPoll::FuncSize() const {
 }
 
 void ThreadPoll::AddTask(Function &&func) {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	while (IsFull()) {
-		notFull_.Wait();
+		notFull_.Wait(lock);
 		/* code */
 	}
 
 	funcs_.emplace(func);
-	notEmpty_.Notify();
+	notEmpty_.NotifyOne();
 }
 
 ThreadPoll::Function ThreadPoll::GetTask() {
-	MutualLock lock(mutex_);
+	LockGuard lock(mutex_);
 	while (IsEmpty() && isRunning_.GetValue()) {
-		notEmpty_.Wait();
+		notEmpty_.Wait(lock);
 		/* code */
 	}
 	Function func = []() {};
 	if (!IsEmpty()) {
 		func = funcs_.front();
 		funcs_.pop();
-		notFull_.Notify();
+		notFull_.NotifyOne();
 	}
 	return func;
 }

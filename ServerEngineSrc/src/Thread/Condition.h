@@ -1,18 +1,20 @@
 #pragma once
 #include <Common/NoCopyable.hpp>
-#include <Thread/Mutex.h>
-#include <pthread.h>
+#include <condition_variable>
+#include <Thread/Lock.h>
+#include <functional>
 namespace Uriel {
 class Condition : public NoCopyable {
 public:
-	Condition(Mutex& mutex);
+	Condition();
 	~Condition();
-	void Wait();
-	void Notify();
+	void Wait(SpinLock& spinLock,  std::function<bool()>&& func);
+	void Wait(SpinLock& spinLock);
+	void Wait(LockGuard& lockGuard);
+	void NotifyOne();
 	void NotifyAll();
 
 private:
-	pthread_cond_t cond_;
-	Mutex &mutex_;
+	std::condition_variable condition_;
 };
 } // namespace Uriel
