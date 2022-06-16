@@ -20,12 +20,11 @@ namespace KBEngine{
 #define OBJECT_POOL_INIT_SIZE			16
 #define OBJECT_POOL_INIT_MAX_SIZE		OBJECT_POOL_INIT_SIZE * 1024
 
-// Ã¿5·ÖÖÓ¼ì²éÒ»´ÎÊÝÉí
+// Ã¿5ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿„1ï¿½7
 #define OBJECT_POOL_REDUCING_TIME_OUT	300 * stampsPerSecondD()
 
-// ×·×Ù¶ÔÏó·ÖÅä´¦
+// ×·ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½ä´„1ï¿½7
 #define OBJECTPOOL_POINT fmt::format("{}#{}", __FUNCTION__, __LINE__).c_str() 
-
 template< typename T >
 class SmartPoolObject;
 
@@ -42,9 +41,10 @@ public:
 };
 
 /*
-	Ò»Ð©¶ÔÏó»á·Ç³£Æµ·±µÄ±»´´½¨£¬ ÀýÈç£ºMemoryStream, Bundle, TCPPacketµÈµÈ
-	Õâ¸ö¶ÔÏó³Ø¶ÔÍ¨¹ý·þÎñ¶Ë·åÖµÓÐÐ§µÄÔ¤¹ÀÌáÇ°´´½¨³öÒ»Ð©¶ÔÏó»º´æÆðÀ´£¬ÔÚÓÃµ½µÄÊ±ºòÖ±½Ó´Ó¶ÔÏó³ØÖÐ
-	»ñÈ¡Ò»¸öÎ´±»Ê¹ÓÃµÄ¶ÔÏó¼´¿É¡£
+	Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½Ç³ï¿½Æµï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç£ºMemoryStream, Bundle, TCPPacketï¿½Èµï¿½
+	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë·ï¿½Öµï¿½ï¿½Ð§ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ó»º´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ö±ï¿½Ó´Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ï¿½ï¿½È¡Ò»ï¿½ï¿½Î´ï¿½ï¿½Ê¹ï¿½ÃµÄ¶ï¿½ï¿½ó¼´¿É¡ï¿½
+	
 */
 template< typename T, typename THREADMUTEX = KBEngine::thread::ThreadMutexNull >
 class ObjectPool
@@ -134,8 +134,8 @@ public:
 	}
 
 	/** 
-		´´½¨Ò»¸ö¶ÔÏó¡£ Èç¹û»º³åÀïÒÑ¾­´´½¨Ôò·µ»ØÏÖÓÐµÄ£¬·ñÔò
-		´´½¨Ò»¸öÐÂµÄ¡£
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½ï¿½ï¿½ï¿½ÐµÄ£ï¿½ï¿½ï¿½ï¿½ï¿„1ï¿½7
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ÂµÄ¡ï¿½
 	*/
 	T* createObject(const std::string& logPoint)
 	{
@@ -165,7 +165,7 @@ public:
 	}
 
 	/**
-		»ØÊÕÒ»¸ö¶ÔÏó
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	void reclaimObject(T* obj)
 	{
@@ -175,7 +175,7 @@ public:
 	}
 
 	/**
-		»ØÊÕÒ»¸ö¶ÔÏóÈÝÆ÷
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	void reclaimObject(std::list<T*>& objs)
 	{
@@ -193,7 +193,7 @@ public:
 	}
 
 	/**
-		»ØÊÕÒ»¸ö¶ÔÏóÈÝÆ÷
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	void reclaimObject(std::vector< T* >& objs)
 	{
@@ -211,7 +211,7 @@ public:
 	}
 
 	/**
-		»ØÊÕÒ»¸ö¶ÔÏóÈÝÆ÷
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	void reclaimObject(std::queue<T*>& objs)
 	{
@@ -264,7 +264,7 @@ public:
 
 protected:
 	/**
-		»ØÊÕÒ»¸ö¶ÔÏó
+		ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 	void reclaimObject_(T* obj)
 	{
@@ -272,7 +272,7 @@ protected:
 		{
 			decLogPoint(obj->poolObjectCreatePoint());
 
-			// ÏÈÖØÖÃ×´Ì¬
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 			obj->onReclaimObject();
 			obj->isEnabledPoolObject(false);
 			obj->poolObjectCreatePoint("");
@@ -293,12 +293,12 @@ protected:
 
 		if (obj_count_ <= OBJECT_POOL_INIT_SIZE)
 		{
-			// Ð¡ÓÚµÈÓÚÔòË¢ÐÂ¼ì²éÊ±¼ä
+			// Ð¡ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â¼ï¿½ï¿½Ê±ï¿½ï¿„1ï¿½7
 			lastReducingCheckTime_ = now_timestamp;
 		}
 		else if (now_timestamp - lastReducingCheckTime_ > OBJECT_POOL_REDUCING_TIME_OUT)
 		{
-			// ³¤Ê±¼ä´óÓÚOBJECT_POOL_INIT_SIZEÎ´Ê¹ÓÃµÄ¶ÔÏóÔò¿ªÊ¼×öÇåÀí¹¤×÷
+			// ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½OBJECT_POOL_INIT_SIZEÎ´Ê¹ï¿½ÃµÄ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			size_t reducing = std::min(objects_.size(), std::min((size_t)OBJECT_POOL_INIT_SIZE, (size_t)(obj_count_ - OBJECT_POOL_INIT_SIZE)));
 			
 			//printf("ObjectPool::reclaimObject_(): start reducing..., name=%s, currsize=%d, OBJECT_POOL_INIT_SIZE=%d\n", 
@@ -327,28 +327,28 @@ protected:
 
 	bool isDestroyed_;
 
-	// Ò»Ð©Ô­Òòµ¼ÖÂËø»¹ÊÇÓÐ±ØÒªµÄ
-	// ÀýÈç£ºdbmgrÈÎÎñÏß³ÌÖÐÊä³ölog£¬cellappÖÐ¼ÓÔØnavmeshºóµÄÏß³Ì»Øµ÷µ¼ÖÂµÄlogÊä³ö
+	// Ò»Ð©Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Òªï¿½ï¿½
+	// ï¿½ï¿½ï¿½ç£ºdbmgrï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½logï¿½ï¿½cellappï¿½Ð¼ï¿½ï¿½ï¿½navmeshï¿½ï¿½ï¿½ï¿½ß³Ì»Øµï¿½ï¿½ï¿½ï¿½Âµï¿½logï¿½ï¿½ï¿„1ï¿½7
 	THREADMUTEX* pMutex_;
 
 	std::string name_;
 
 	size_t total_allocs_;
 
-	// Linux»·¾³ÖÐ£¬list.size()Ê¹ÓÃµÄÊÇstd::distance(begin(), end())·½Ê½À´»ñµÃ
-	// »á¶ÔÐÔÄÜÓÐÓ°Ïì£¬ÕâÀïÎÒÃÇ×Ô¼º¶Ôsize×öÒ»¸ö¼ÇÂ¼
+	// Linuxï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½list.size()Ê¹ï¿½Ãµï¿½ï¿½ï¿½std::distance(begin(), end())ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿„1ï¿½7
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ì£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½sizeï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Â¼
 	size_t obj_count_;
 
-	// ×îºóÒ»´ÎÊÝÉí¼ì²éÊ±¼ä
-	// Èç¹û³¤´ïOBJECT_POOL_REDUCING_TIME_OUT´óÓÚOBJECT_POOL_INIT_SIZE£¬Ôò×î¶àÊÝÉíOBJECT_POOL_INIT_SIZE¸ö
+	// ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½OBJECT_POOL_REDUCING_TIME_OUTï¿½ï¿½ï¿½ï¿½OBJECT_POOL_INIT_SIZEï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½OBJECT_POOL_INIT_SIZEï¿½ï¿½
 	uint64 lastReducingCheckTime_;
 
-	// ¼ÇÂ¼µÄ´´½¨Î»ÖÃÐÅÏ¢£¬ÓÃÓÚ×·×ÙÐ¹Â¶µã
+	// ï¿½ï¿½Â¼ï¿½Ä´ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×·ï¿½ï¿½Ð¹Â¶ï¿½ï¿½
 	std::map<std::string, ObjectPoolLogPoint> logPoints_;
 };
 
 /*
-	³Ø¶ÔÏó£¬ ËùÓÐÊ¹ÓÃ³ØµÄ¶ÔÏó±ØÐëÊµÏÖ»ØÊÕ¹¦ÄÜ¡£
+	ï¿½Ø¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã³ØµÄ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö»ï¿½ï¿½Õ¹ï¿½ï¿½Ü¡ï¿„1ï¿½7
 */
 class PoolObject
 {
@@ -370,8 +370,8 @@ public:
 	}
 
 	/**
-		³Ø¶ÔÏó±»Îö¹¹Ç°µÄÍ¨Öª
-		Ä³Ð©¶ÔÏó¿ÉÒÔÔÚ´Ë×öÒ»Ð©¹¤×÷
+		ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Í¨Öª
+		Ä³Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿„1ï¿½7
 	*/
 	virtual bool destructorPoolObject()
 	{
@@ -400,10 +400,10 @@ public:
 
 protected:
 
-	// ³Ø¶ÔÏóÊÇ·ñ´¦ÓÚ¼¤»î£¨´Ó³ØÖÐÒÑ¾­È¡³ö£©×´Ì¬
+	// ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ú¼ï¿½ï¿½î£¨ï¿½Ó³ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½È¡ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	bool isEnabledPoolObject_;
 
-	// ¼ÇÂ¼¶ÔÏó´´½¨µÄÎ»ÖÃ
+	// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ó´´½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	std::string poolObjectCreatePoint_;
 };
 

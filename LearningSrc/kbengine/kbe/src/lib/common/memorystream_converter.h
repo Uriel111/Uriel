@@ -1,60 +1,75 @@
 // Copyright 2008-2018 Yolo Technologies, Inc. All Rights Reserved. https://www.comblockengine.com
 
 /*
-	×Ö½ÚĞò½»»»´¦ÀíÄ£¿é£º
-		 ÓÉÓÚÍøÂçÍ¨ĞÅÒ»°ã²ÉÓÃBIG×Ö½ÚĞò\Ò²½Ğ×öÍøÂç×Ö½ÚĞò.
- 		 ÎÒÃÇÊ¹ÓÃµÄPC»ú»òÕßÇ¶ÈëÊ½ÏµÍ³¿ÉÄÜÊ¹ÓÃBIG×Ö½ÚĞòÒ²¿ÉÄÜÊ¹ÓÃLITTEN(Ğ¡×Ö½ÚĞò)
- 		 ËùÒÔÎÒÃÇ±ØĞëÔÚ´ËÖ®¼ä×öÒ»¸ö×Ö½ÚĞòµÄ×ª»»¡£
+	ï¿½Ö½ï¿½ï¿½ò½»»ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½é£º
+		 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½BIGï¿½Ö½ï¿½ï¿½ï¿½\Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½.
+		 ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½PCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½ï¿½Ê½ÏµÍ³ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½BIGï¿½Ö½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½LITTEN(Ğ¡ï¿½Ö½ï¿½ï¿½ï¿½)
+		 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ö®ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
 */
 #ifndef KBE_MEMORYSTREAMCONVERTER_H
 #define KBE_MEMORYSTREAMCONVERTER_H
 
 #include "common/common.h"
-	
-namespace KBEngine{
 
-namespace MemoryStreamConverter
+namespace KBEngine
 {
-    template<size_t T>
-        inline void convert(char *val)
-    {
-        std::swap(*val, *(val + T - 1));
-        convert<T - 2>(val + 1);
-    }
-
-    template<> inline void convert<0>(char *) {}
-    template<> inline void convert<1>(char *) {}            // ignore central byte
-
-    template<typename T> inline void apply(T *val)
-    {
-        convert<sizeof(T)>((char *)(val));
-    }
-
-	inline void convert(char *val, size_t size)
+	//  æ‰­è½¬å­—èŠ‚åºçš„å·¥å…·   ä¸ºäº†ç½‘ç»œä¼ è¾“ä½¿ç”¨
+	namespace MemoryStreamConverter
 	{
-		if(size < 2)
-			return;
+		template <size_t T>
+		inline void convert(char *val)
+		{
+			std::swap(*val, *(val + T - 1));
+			convert<T - 2>(val + 1);
+		}
 
-		std::swap(*val, *(val + size - 1));
-		convert(val + 1, size - 2);
+		template <>
+		inline void convert<0>(char *) {}
+		template <>
+		inline void convert<1>(char *) {} // ignore central byte
+
+		template <typename T>
+		inline void apply(T *val)
+		{
+			convert<sizeof(T)>((char *)(val));
+		}
+
+		inline void convert(char *val, size_t size)
+		{
+			if (size < 2)
+				return;
+
+			std::swap(*val, *(val + size - 1));
+			convert(val + 1, size - 2);
+		}
 	}
-}
 
-#if KBENGINE_ENDIAN == KBENGINE_BIG_ENDIAN			// ¿ÉÒÔÊ¹ÓÃsys.isPlatformLittleEndian() ½øĞĞ²âÊÔ
-template<typename T> inline void EndianConvert(T& val) { MemoryStreamConverter::apply<T>(&val); }
-template<typename T> inline void EndianConvertReverse(T&) { }
+#if KBENGINE_ENDIAN == KBENGINE_BIG_ENDIAN // ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½sys.isPlatformLittleEndian() ï¿½ï¿½ï¿½Ğ²ï¿½ï¿½ï¿½
+	template <typename T>
+	inline void EndianConvert(T &val)
+	{
+		MemoryStreamConverter::apply<T>(&val);
+	}
+	template <typename T>
+	inline void EndianConvertReverse(T &) {}
 #else
-template<typename T> inline void EndianConvert(T&) { }
-template<typename T> inline void EndianConvertReverse(T& val) { MemoryStreamConverter::apply<T>(&val); }
+	template <typename T>
+	inline void EndianConvert(T &)
+	{
+	}
+	template <typename T>
+	inline void EndianConvertReverse(T &val) { MemoryStreamConverter::apply<T>(&val); }
 #endif
 
-template<typename T> void EndianConvert(T*);         // will generate link error
-template<typename T> void EndianConvertReverse(T*);  // will generate link error
+	template <typename T>
+	void EndianConvert(T *); // will generate link error
+	template <typename T>
+	void EndianConvertReverse(T *); // will generate link error
 
-inline void EndianConvert(uint8&) { }
-inline void EndianConvert(int8&) { }
-inline void EndianConvertReverse(uint8&) { }
-inline void EndianConvertReverse(int8&) { }
+	inline void EndianConvert(uint8 &) {}
+	inline void EndianConvert(int8 &) {}
+	inline void EndianConvertReverse(uint8 &) {}
+	inline void EndianConvertReverse(int8 &) {}
 
 }
 #endif
