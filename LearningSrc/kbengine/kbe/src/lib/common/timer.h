@@ -10,7 +10,7 @@ namespace KBEngine
 {
 class TimersBase;
 class TimeBase;
-
+// TimerHandleå°±æ˜¯ä¸€å±‚åŒ…æ‹¬Timeçš„å£³
 class TimerHandle
 {
 public:
@@ -35,8 +35,8 @@ inline bool operator==( TimerHandle h1, TimerHandle h2 )
 
 
 /**
- *	±ØÐë¼Ì³ÐÕâ¸ö½Ó¿Ú
- *	À´½ÓÊÕtimer->handleTimeoutÊÂ¼þ
+ *	ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
+ *	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½timer->handleTimeoutï¿½Â¼ï¿½
  */
 class TimerHandler
 {
@@ -59,7 +59,7 @@ private:
 	void incTimerRegisterCount() { ++numTimesRegistered_; }
 	void decTimerRegisterCount() { --numTimesRegistered_; }
 
-	void release( TimerHandle handle, void * pUser )
+	void release( TimerHandle handle, void * pUser ) // pUser -> UserData
 	{
 		this->decTimerRegisterCount();
 		this->onRelease( handle, pUser );
@@ -70,6 +70,9 @@ private:
 
 class TimeBase
 {
+/*
+åŸºç¡€æ—¶é—´ç±»
+*/
 public:
 	TimeBase(TimersBase &owner, TimerHandler* pHandler, 
 		void* pUserData);
@@ -96,7 +99,7 @@ protected:
 	void *pUserData_;
 	TimeState state_;
 };
-
+// Holding All TimerBase
 class TimersBase
 {
 public:

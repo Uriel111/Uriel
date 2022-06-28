@@ -102,7 +102,7 @@ void TimersT< TIME_STAMP >::purgeCancelledTimes()
 	container.erase( newEnd, container.end() );
 	timeQueue_.make_heap();
 }
-
+//  应该是处理到时的timer
 template <class TIME_STAMP>
 int TimersT< TIME_STAMP >::process(TimeStamp now)
 {
@@ -138,7 +138,7 @@ int TimersT< TIME_STAMP >::process(TimeStamp now)
 	lastProcessTime_ = now;
 	return numFired;
 }
-
+// 找到容器中是否存在这样的timer
 template <class TIME_STAMP>
 bool TimersT< TIME_STAMP >::legal(TimerHandle handle) const
 {
