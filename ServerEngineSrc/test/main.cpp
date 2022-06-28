@@ -1,7 +1,12 @@
+#include <Common/Singleton.hpp>
+#include <assert.h>
 #include <fmt/printf.h>
-int main()
-{
-	FMT_ASSERT(0, "ERROR");
-	fmt::print("hello world!!\n");
-	return 0;
+class Test{
+
+};
+
+int main() {
+	Test &t = Singleton<Test>::Instance();
+	t = Singleton<Test>::Instance();
+	fmt::print("111");
 }

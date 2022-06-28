@@ -1,0 +1,8 @@
+CMakeFiles*
+*.o
+cpptest
+main
+*.cmake
+*.txt
+Makefile
+core.*
