@@ -1,16 +1,16 @@
 #include <Common/Logging.h>
-#include <Thread/ThreadPoll.h>
+#include <Thread/ThreadPool.h>
 #include <exception>
 #include <iostream>
 #include <numeric>
 namespace Uriel {
-ThreadPoll::ThreadPoll(unsigned short threadNums, unsigned int maxFuncNums) : threadNums_(threadNums), notEmpty_(), notFull_(), maxFuncNums_(maxFuncNums), isRunning_(false) {}
+ThreadPool::ThreadPool(unsigned short threadNums, unsigned int maxFuncNums) : threadNums_(threadNums), notEmpty_(), notFull_(), maxFuncNums_(maxFuncNums), isRunning_(false) {}
 
-ThreadPoll::ThreadPoll() : ThreadPoll(0, std::numeric_limits<unsigned int>::max()) {}
+ThreadPool::ThreadPool() : ThreadPool(0, std::numeric_limits<unsigned int>::max()) {}
 
-ThreadPoll::ThreadPoll(unsigned short threadNums) : ThreadPoll(threadNums, std::numeric_limits<unsigned int>::max()) {}
+ThreadPool::ThreadPool(unsigned short threadNums) : ThreadPool(threadNums, std::numeric_limits<unsigned int>::max()) {}
 
-void ThreadPoll::Poll() {
+void ThreadPool::Poll() {
 	if (!isRunning_.GetValue() && threads_.empty()) {
 		return;
 	}
@@ -22,7 +22,7 @@ void ThreadPoll::Poll() {
 	}
 }
 
-ThreadPoll::~ThreadPoll() {
+ThreadPool::~ThreadPool() {
 	for (auto &thread : threads_) {
 		if (thread.joinable()) {
 			thread.join();
@@ -30,15 +30,15 @@ ThreadPoll::~ThreadPoll() {
 	}
 }
 
-void ThreadPoll::SetThreadNums(unsigned short threadNums) {
+void ThreadPool::SetThreadNums(unsigned short threadNums) {
 	threadNums_ = threadNums;
 }
 
-const unsigned int ThreadPoll::FuncSize() const {
+const unsigned int ThreadPool::FuncSize() const {
 	return funcs_.size();
 }
 
-void ThreadPoll::AddTask(Function &&func) {
+void ThreadPool::AddTask(Function &&func) {
 	LockGuard lock(mutex_);
 	while (IsFull()) {
 		notFull_.Wait(lock);
@@ -49,7 +49,7 @@ void ThreadPoll::AddTask(Function &&func) {
 	notEmpty_.NotifyOne();
 }
 
-ThreadPoll::Function ThreadPoll::GetTask() {
+ThreadPool::Function ThreadPool::GetTask() {
 	LockGuard lock(mutex_);
 	while (IsEmpty() && isRunning_.GetValue()) {
 		notEmpty_.Wait(lock);
@@ -64,15 +64,15 @@ ThreadPoll::Function ThreadPoll::GetTask() {
 	return func;
 }
 
-const bool ThreadPoll::IsFull() const {
+const bool ThreadPool::IsFull() const {
 	return funcs_.size() == maxFuncNums_;
 }
 
-const bool ThreadPoll::IsEmpty() const {
+const bool ThreadPool::IsEmpty() const {
 	return funcs_.empty();
 }
 
-void ThreadPoll::RunInSubThread() {
+void ThreadPool::RunInSubThread() {
 
 	while (isRunning_.GetValue()) {
 		Function func = GetTask();
@@ -81,14 +81,14 @@ void ThreadPoll::RunInSubThread() {
 	}
 }
 
-void ThreadPoll::Start() {
+void ThreadPool::Start() {
 	isRunning_ = true;
 	for (unsigned short index = 0; index != threadNums_; ++index) {
-		threads_.emplace_back(std::thread(std::bind(&ThreadPoll::RunInSubThread, this)));
+		threads_.emplace_back(std::thread(std::bind(&ThreadPool::RunInSubThread, this)));
 	}
 }
 
-void ThreadPoll::Stop() {
+void ThreadPool::Stop() {
 
 	isRunning_ = false;
 	notEmpty_.NotifyAll();

@@ -6,14 +6,14 @@
 #include <thread>
 #include <vector>
 namespace Uriel {
-class ThreadPoll : public NoCopyable {
+class ThreadPool : public NoCopyable {
 public:
 	using Function = std::function<void()>;
-	ThreadPoll(unsigned short threadNums, unsigned int maxFuncNums);
-	ThreadPoll(); // main thread poll, run in main thread
-	ThreadPoll(unsigned short threadNums);
+	ThreadPool(unsigned short threadNums, unsigned int maxFuncNums);
+	ThreadPool(); // main thread poll, run in main thread
+	ThreadPool(unsigned short threadNums);
 	// ThreadPoll(ThreadPoll &&threadPoll);
-	~ThreadPoll();
+	~ThreadPool();
 	void Start();
 	void Stop();
 	void Poll();
