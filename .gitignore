@@ -1,0 +1,8 @@
+# 忽略所有CMakeFiles文件夹
+CMakeFiles/
+
+# 忽略所有.cmake文件
+*.cmake
+
+# 忽略所有.txt文件
+*.txt
